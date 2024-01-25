@@ -6,12 +6,41 @@
 """
 from pynput import keyboard 
 import subprocess
+from notifypy import Notify
 
 capsLockKeyStatus = False  
 numLockKeyStatus =  False
 
-class 
-def on_pressed(key):
+
+# handle notififcations
+def send_notification(type, status):
+    notification = Notify()
+    #for caps lock
+    if type=="caps lock" and status == True:
+        notification.title = "Caps lock event detected"
+        notification.message = "Caps lock turned ON"
+        notification.icon = "./icons/CapsLock_On.png"
+    elif type=="caps lock" and status == False:
+        notification.title = "Caps lock event detected"
+        notification.message = "Caps lock turned OFF"
+        notification.icon = "./icons/CapsLock_Off.png"
+    else:
+        if type=="num lock" and status == True:
+            notification.title = "Num lock event detected"
+            notification.message = "Num lock turned ON"
+            notification.icon = "./icons/NumLock_On.png"
+        elif type=="num lock" and status == False:
+            notification.title = "Num lock event detected"
+            notification.message = "Num lock turned OFF"
+            notification.icon = "./icons/NumLock_Off.png"
+        else:
+            pass
+    
+    notification.send()
+    return 
+
+
+def on_press(key):
     # verify the current status
     # 49 -> caps lock
     # 50 -> num lock
@@ -19,10 +48,13 @@ def on_pressed(key):
     led = verify_lock_status()
     if key == keyboard.Key.caps_lock:
         if led == 49 or led == 51:
-            capsLockKeyStatus = True
-            print("you pressed caps lock key")
+            capsLockKeyStatus = False
+            print("you pressed caps lock key" + " " +str(verify_lock_status()))
+            
         else:
-            print("Caps lock not pressed")
+            capsLockKeyStatus = False
+            print("Caps lock not pressed"+ " " +str(verify_lock_status()))
+        send_notification("caps lock", capsLockKeyStatus)
     elif key == keyboard.Key.num_lock:
         if led == 50 or led == 51:
             capsLockKeyStatus = False
@@ -30,6 +62,7 @@ def on_pressed(key):
         else:
             apsLockKeyStatus = False
             print("num lock not activated")
+        send_notification("num lock", capsLockKeyStatus)
 
     else:
         print("Not of interst")
@@ -41,7 +74,7 @@ def verify_lock_status():
 
 # add key listener
 with keyboard.Listener(
-    on_press=on_pressed
+    on_press=on_press
 ) as listener:
     try:
         listener.join()
