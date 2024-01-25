@@ -8,8 +8,8 @@ from pynput import keyboard
 import subprocess
 from notifypy import Notify
 
-capsLockKeyStatus = False  
-numLockKeyStatus =  False
+capsLockKeyStatus = False
+numLockKeyStatus = False
 
 
 # handle notififcations
@@ -33,8 +33,7 @@ def send_notification(type, status):
             notification.title = "Num lock event detected"
             notification.message = "Num lock turned OFF"
             notification.icon = "./icons/NumLock_Off.png"
-        else:
-            pass
+    
     
     notification.send()
     return 
@@ -45,32 +44,47 @@ def on_press(key):
     # 49 -> caps lock
     # 50 -> num lock
     # 51 -> caps lock + num lock   
-    led = verify_lock_status()
+    global capsLockKeyStatus, numLockKeyStatus 
     if key == keyboard.Key.caps_lock:
-        if led == 49 or led == 51:
-            capsLockKeyStatus = False
-            print("you pressed caps lock key" + " " +str(verify_lock_status()))
+        if capsLockKeyStatus == False :#led == 49 or led == 51:
+            capsLockKeyStatus = True
+            print("Caps lock key activated ")
             
         else:
             capsLockKeyStatus = False
-            print("Caps lock not pressed"+ " " +str(verify_lock_status()))
-        send_notification("caps lock", capsLockKeyStatus)
-    elif key == keyboard.Key.num_lock:
-        if led == 50 or led == 51:
-            capsLockKeyStatus = False
-            print("you pressed num lock key")
+            print("Caps lock key deactivated ")
+        #send_notification("caps lock", capsLockKeyStatus)
+    if key == keyboard.Key.num_lock:
+        if  numLockKeyStatus == False:#led == 50 or led == 51:
+            numLockKeyStatus = True
+            print("num lock key activated")
         else:
-            apsLockKeyStatus = False
-            print("num lock not activated")
-        send_notification("num lock", capsLockKeyStatus)
-
-    else:
-        print("Not of interst")
+            numLockKeyStatus  = False
+            print("num lock deactivated")
+        #send_notification("num lock", numLockKeyStatus )
 
 
-def verify_lock_status():
+def get_lock_status():
     led = subprocess.check_output('xset q | grep LED', shell=True)[65]
     return led 
+
+def set_lock_status(led):
+    if led == 49:
+        capsLockKeyStatus = True
+        numLockKeyStatus = False
+    elif led == 50:
+        numLockKeyStatus = True
+        capsLockKeyStatus = False
+    elif led==51:
+        numLockKeyStatus = True
+        capsLockKeyStatus = True
+    else:
+        numLockKeyStatus = False
+        capsLockKeyStatus = False  
+
+led = get_lock_status()
+
+set_lock_status(led)
 
 # add key listener
 with keyboard.Listener(
@@ -80,4 +94,5 @@ with keyboard.Listener(
         listener.join()
     except :
         pass
+
 
