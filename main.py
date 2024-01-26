@@ -1,16 +1,17 @@
- 
+#!/home/lordcaf/.virtualenv-python/dev/bin/python
 """
-    A simple python script to detect the status of lock keys using python keyboard and notify-py modules.
-    Tested using Arch Linux 
+    A simple python script to detect the status of lock keys(Caps lock and num lock) using python keyboard and notify-py modules.
+    Tested using Arch Linux with KDE plasma 
     author : lemonHope
 """
 from pynput import keyboard 
 import subprocess
 from notifypy import Notify
+import logging
+
 
 capsLockKeyStatus = False
 numLockKeyStatus = False
-
 
 # handle notififcations
 def send_notification(type, status):
@@ -46,22 +47,18 @@ def on_press(key):
     # 51 -> caps lock + num lock   
     global capsLockKeyStatus, numLockKeyStatus 
     if key == keyboard.Key.caps_lock:
-        if capsLockKeyStatus == False :#led == 49 or led == 51:
+        if capsLockKeyStatus == False :
             capsLockKeyStatus = True
-            print("Caps lock key activated ")
             
         else:
             capsLockKeyStatus = False
-            print("Caps lock key deactivated ")
-        #send_notification("caps lock", capsLockKeyStatus)
+        send_notification("caps lock", capsLockKeyStatus)
     if key == keyboard.Key.num_lock:
-        if  numLockKeyStatus == False:#led == 50 or led == 51:
+        if  numLockKeyStatus == False:
             numLockKeyStatus = True
-            print("num lock key activated")
         else:
             numLockKeyStatus  = False
-            print("num lock deactivated")
-        #send_notification("num lock", numLockKeyStatus )
+        send_notification("num lock", numLockKeyStatus )
 
 
 def get_lock_status():
@@ -92,7 +89,7 @@ with keyboard.Listener(
 ) as listener:
     try:
         listener.join()
-    except :
-        pass
+    except Exception as error :
+        logging.error('Error occured with the listener', exc_info=error)
 
 
