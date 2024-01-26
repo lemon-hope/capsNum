@@ -37,7 +37,6 @@ def send_notification(type, status):
     
     
     notification.send()
-    return 
 
 
 def on_press(key):
