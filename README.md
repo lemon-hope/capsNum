@@ -20,6 +20,25 @@ To set up and run, you can use `make install && make run` that will install all 
 
 This script uses a threading.Thread listener to listen for keyboard events, and it should not be used as a keylogger.
 
+## Extra
 
+Create a job to automatically run the script at startup with systemd.
+Create a file `sudo touch /etc/systemd/system/lockkey_status.service` and add the following lines :
 
+```
+[Unit]
+Description=Track lock key(caps lock and num lock) status using python
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/path/to/python/venv /path/to/script.py
+WantedBy=multi-user.target
+
+[Install]
+WantedBy=default.target
+
+```
+
+Then run the following commands : `systemctl --user daemon-reload && systemctl --user start lockey_status.service && systemctl --user enable lockey_status.service`
 
