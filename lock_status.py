@@ -1,4 +1,3 @@
-#!/home/lordcaf/.virtualenv-python/dev/bin/python
 """
     A simple python script to detect the status of lock keys(Caps lock and num lock) using python keyboard and notify-py modules.
     Tested using Arch Linux with KDE plasma 
@@ -12,6 +11,12 @@ import logging
 
 capsLockKeyStatus = False
 numLockKeyStatus = False
+
+# logger configuration
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s:%(levelname)s:%(message)s"
+)
 
 # handle notififcations
 def send_notification(type, status):
@@ -35,7 +40,7 @@ def send_notification(type, status):
             notification.message = "Num lock turned OFF"
             notification.icon = "./icons/NumLock_Off.png"
     
-    
+    logging.info('Sending notification')
     notification.send()
 
 
@@ -43,20 +48,25 @@ def on_press(key):
     # verify the current status
     # 49 -> caps lock
     # 50 -> num lock
-    # 51 -> caps lock + num lock   
+    # 51 -> caps lock + num lock
+    logging.warn('Key event detected ')   
     global capsLockKeyStatus, numLockKeyStatus 
     if key == keyboard.Key.caps_lock:
         if capsLockKeyStatus == False :
             capsLockKeyStatus = True
+            logging.info('Caps lock turned on')
             
         else:
             capsLockKeyStatus = False
+            logging.info('Caps lock turned off')
         send_notification("caps lock", capsLockKeyStatus)
     if key == keyboard.Key.num_lock:
         if  numLockKeyStatus == False:
             numLockKeyStatus = True
+            logging.info('Num lock turned on')
         else:
             numLockKeyStatus  = False
+            logging.info('Num lock turned on')
         send_notification("num lock", numLockKeyStatus )
 
 
