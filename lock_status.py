@@ -1,3 +1,4 @@
+
 """
     A simple python script to detect the status of lock keys(Caps lock and num lock) using python keyboard and notify-py modules.
     Tested using Arch Linux with KDE plasma 

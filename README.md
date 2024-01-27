@@ -20,25 +20,6 @@ To set up and run, you can use `make install && make run` that will install all 
 
 This script uses a threading.Thread listener to listen for keyboard events, and it should not be used as a keylogger.
 
-## Extra
-
-Create a job to automatically run the script at startup with systemd.
-Create a file `sudo touch /etc/systemd/system/lockkeys.service` and add the following lines :
-
-
-
-```
-[Unit]
-Description=Track lock key status with python
-
-[Service]
-ExecStart=/path/to/virtualenv/ /path/to/script.py
-
-[Install]
-WantedBy=multi-user.target 
-
-```
-
 
 
 
