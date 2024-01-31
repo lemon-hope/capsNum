@@ -10,9 +10,6 @@ from notifypy import Notify
 import logging
 
 
-capsLockKeyStatus = False
-numLockKeyStatus = False
-
 # logger configuration
 logging.basicConfig(
     level=logging.DEBUG,
@@ -76,6 +73,7 @@ def get_lock_status():
     return led 
 
 def set_lock_status(led):
+    global capsLockKeyStatus, numLockKeyStatus
     if led == 49:
         capsLockKeyStatus = True
         numLockKeyStatus = False
@@ -88,10 +86,10 @@ def set_lock_status(led):
     else:
         numLockKeyStatus = False
         capsLockKeyStatus = False  
+    return capsLockKeyStatus, numLockKeyStatus
 
 led = get_lock_status()
-
-set_lock_status(led)
+capsLockKeyStatus, numLockKeyStatus = set_lock_status(led)
 
 # add key listener
 with keyboard.Listener(
