@@ -1,5 +1,5 @@
 
-pythonPath=/home/lordcaf/.virtualenv-python/dev/bin/python# put here the path to python env 
+pythonPath=path/to/python # put here the path to python env 
 
 all: install run
 

@@ -47,7 +47,7 @@ def on_press(key):
     # 49 -> caps lock
     # 50 -> num lock
     # 51 -> caps lock + num lock
-    logging.warn('Key event detected ')   
+    logging.warning('Key event detected ')   
     global capsLockKeyStatus, numLockKeyStatus 
     if key == keyboard.Key.caps_lock:
         if capsLockKeyStatus == False :
